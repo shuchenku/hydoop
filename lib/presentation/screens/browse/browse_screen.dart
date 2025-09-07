@@ -2,8 +2,21 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../routes/app_router.dart';
 
-class BrowseScreen extends StatelessWidget {
+class BrowseScreen extends StatefulWidget {
   const BrowseScreen({super.key});
+
+  @override
+  State<BrowseScreen> createState() => _BrowseScreenState();
+}
+
+class _BrowseScreenState extends State<BrowseScreen> {
+  String _selectedSeason = 'S8 (2025)';
+  
+  final List<Map<String, String>> _seasons = [
+    {'label': 'S8 (2025)', 'value': 'S8'},
+    {'label': 'S7 (2025)', 'value': 'S7'},
+    {'label': 'S6 (2024)', 'value': 'S6'},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +50,17 @@ class BrowseScreen extends StatelessWidget {
             ),
             const SizedBox(height: AppTheme.spacingSm),
             
-            // Season chips (placeholder)
+            // Season chips
             Wrap(
               spacing: AppTheme.spacingSm,
-              children: [
-                _buildSeasonChip(context, 'S8 (2025)', true),
-                _buildSeasonChip(context, 'S7 (2025)', false),
-                _buildSeasonChip(context, 'S6 (2024)', false),
-              ],
+              children: _seasons.map((season) => 
+                _buildSeasonChip(
+                  context, 
+                  season['label']!, 
+                  _selectedSeason == season['label'],
+                  () => setState(() => _selectedSeason = season['label']!),
+                ),
+              ).toList(),
             ),
             
             const SizedBox(height: AppTheme.spacingLg),
@@ -60,24 +76,7 @@ class BrowseScreen extends StatelessWidget {
             
             Expanded(
               child: ListView(
-                children: [
-                  _buildRaceCard(
-                    context,
-                    eventId: 'HPRO_LR3MS4JICA9',
-                    title: 'S8 2025 Beijing',
-                    location: 'Beijing, China',
-                    date: '2025',
-                    participants: '450',
-                  ),
-                  _buildRaceCard(
-                    context,
-                    eventId: 'HPRO_LR3MS4JIA3E',
-                    title: 'S7 2025 Shanghai',
-                    location: 'Shanghai, China',
-                    date: '2025',
-                    participants: '520',
-                  ),
-                ],
+                children: _getFilteredRaces(),
               ),
             ),
           ],
@@ -86,13 +85,51 @@ class BrowseScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSeasonChip(BuildContext context, String label, bool isSelected) {
+  List<Widget> _getFilteredRaces() {
+    final allRaces = [
+      {
+        'eventId': 'HPRO_LR3MS4JICA9',
+        'title': 'S8 2025 Beijing',
+        'location': 'Beijing, China',
+        'date': '2025',
+        'participants': '450',
+        'season': 'S8 (2025)',
+      },
+      {
+        'eventId': 'HPRO_LR3MS4JIA3E',
+        'title': 'S7 2025 Shanghai',
+        'location': 'Shanghai, China',
+        'date': '2025',
+        'participants': '520',
+        'season': 'S7 (2025)',
+      },
+      {
+        'eventId': 'HPRO_LR3MS4JIA3F',
+        'title': 'S6 2024 Demo Race',
+        'location': 'Demo City',
+        'date': '2024',
+        'participants': '300',
+        'season': 'S6 (2024)',
+      },
+    ];
+    
+    final filteredRaces = allRaces.where((race) => race['season'] == _selectedSeason).toList();
+    
+    return filteredRaces.map((race) => _buildRaceCard(
+      context,
+      eventId: race['eventId']!,
+      title: race['title']!,
+      location: race['location']!,
+      date: race['date']!,
+      participants: race['participants']!,
+    )).toList();
+  }
+  
+  Widget _buildSeasonChip(BuildContext context, String label, bool isSelected, VoidCallback onTap) {
     return FilterChip(
       label: Text(label),
       selected: isSelected,
-      onSelected: (selected) {
-        // TODO: Implement season filtering
-      },
+      onSelected: (_) => onTap(),
       backgroundColor: Theme.of(context).colorScheme.secondary,
       selectedColor: Theme.of(context).colorScheme.primary,
       labelStyle: TextStyle(

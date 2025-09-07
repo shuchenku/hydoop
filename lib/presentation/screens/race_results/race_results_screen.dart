@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../routes/app_router.dart';
 
-class RaceResultsScreen extends StatelessWidget {
+class RaceResultsScreen extends StatefulWidget {
   const RaceResultsScreen({
     super.key,
     required this.eventId,
@@ -13,10 +13,21 @@ class RaceResultsScreen extends StatelessWidget {
   final String? eventName;
 
   @override
+  State<RaceResultsScreen> createState() => _RaceResultsScreenState();
+}
+
+class _RaceResultsScreenState extends State<RaceResultsScreen> {
+  String _selectedDivision = 'All';
+  String _selectedAgeGroup = 'All';
+  
+  final List<String> _divisions = ['All', 'Pro', 'Open', 'Doubles'];
+  final List<String> _ageGroups = ['All', '16-24', '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55+'];
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(eventName ?? 'Race Results'),
+        title: Text(widget.eventName ?? 'Race Results'),
         leading: IconButton(
           onPressed: () => AppRouter.goBack(context),
           icon: const Icon(Icons.arrow_back),
@@ -34,8 +45,9 @@ class RaceResultsScreen extends StatelessWidget {
                   child: _buildFilterDropdown(
                     context,
                     'Division',
-                    ['All', 'Pro', 'Open', 'Doubles'],
-                    'All',
+                    _divisions,
+                    _selectedDivision,
+                    (value) => setState(() => _selectedDivision = value!),
                   ),
                 ),
                 const SizedBox(width: AppTheme.spacingSm),
@@ -43,8 +55,9 @@ class RaceResultsScreen extends StatelessWidget {
                   child: _buildFilterDropdown(
                     context,
                     'Age Group',
-                    ['All', '25-29', '30-34', '35-39'],
-                    'All',
+                    _ageGroups,
+                    _selectedAgeGroup,
+                    (value) => setState(() => _selectedAgeGroup = value!),
                   ),
                 ),
               ],
@@ -54,7 +67,7 @@ class RaceResultsScreen extends StatelessWidget {
             
             // Results count
             Text(
-              'Showing 0 results',
+              'Filters: Division: $_selectedDivision, Age: $_selectedAgeGroup',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
               ),
@@ -100,6 +113,7 @@ class RaceResultsScreen extends StatelessWidget {
     String label,
     List<String> options,
     String selectedValue,
+    void Function(String?) onChanged,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,9 +134,7 @@ class RaceResultsScreen extends StatelessWidget {
               value: selectedValue,
               isExpanded: true,
               icon: const Icon(Icons.arrow_drop_down),
-              onChanged: (value) {
-                // TODO: Implement filtering
-              },
+              onChanged: onChanged,
               items: options.map((option) {
                 return DropdownMenuItem(
                   value: option,

@@ -2,8 +2,29 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../routes/app_router.dart';
 
-class SearchAthletesScreen extends StatelessWidget {
+class SearchAthletesScreen extends StatefulWidget {
   const SearchAthletesScreen({super.key});
+
+  @override
+  State<SearchAthletesScreen> createState() => _SearchAthletesScreenState();
+}
+
+class _SearchAthletesScreenState extends State<SearchAthletesScreen> {
+  String _selectedRace = 'S8 2025 Beijing';
+  String _selectedDivision = 'All';
+  
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _bibController = TextEditingController();
+  
+  final List<String> _races = ['S8 2025 Beijing', 'S7 2025 Shanghai'];
+  final List<String> _divisions = ['All', 'Pro', 'Open', 'Doubles'];
+  
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _bibController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +47,23 @@ class SearchAthletesScreen extends StatelessWidget {
             child: Column(
               children: [
                 // Race dropdown
-                _buildDropdown(context, 'Race', ['S8 2025 Beijing', 'S7 2025 Shanghai']),
+                _buildDropdown(
+                  context, 
+                  'Race', 
+                  _races, 
+                  _selectedRace,
+                  (value) => setState(() => _selectedRace = value!),
+                ),
                 const SizedBox(height: AppTheme.spacingSm),
                 
                 // Division dropdown
-                _buildDropdown(context, 'Division', ['All', 'Pro', 'Open', 'Doubles']),
+                _buildDropdown(
+                  context, 
+                  'Division', 
+                  _divisions,
+                  _selectedDivision,
+                  (value) => setState(() => _selectedDivision = value!),
+                ),
                 const SizedBox(height: AppTheme.spacingSm),
                 
                 // Name and bib number fields
@@ -38,6 +71,7 @@ class SearchAthletesScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: TextField(
+                        controller: _firstNameController,
                         decoration: const InputDecoration(
                           labelText: 'First Name',
                           hintText: 'Enter first name',
@@ -47,6 +81,7 @@ class SearchAthletesScreen extends StatelessWidget {
                     const SizedBox(width: AppTheme.spacingSm),
                     Expanded(
                       child: TextField(
+                        controller: _bibController,
                         decoration: const InputDecoration(
                           labelText: 'Bib Number',
                           hintText: 'Enter bib',
@@ -62,9 +97,7 @@ class SearchAthletesScreen extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    onPressed: () {
-                      // TODO: Implement search
-                    },
+                    onPressed: _performSearch,
                     icon: const Icon(Icons.search),
                     label: const Text('Search Athletes'),
                   ),
@@ -127,7 +160,30 @@ class SearchAthletesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDropdown(BuildContext context, String label, List<String> options) {
+  void _performSearch() {
+    final searchCriteria = {
+      'race': _selectedRace,
+      'division': _selectedDivision,
+      'firstName': _firstNameController.text.trim(),
+      'bibNumber': _bibController.text.trim(),
+    };
+    
+    // TODO: Implement actual search logic with database
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Searching with: ${searchCriteria.toString()}'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+  
+  Widget _buildDropdown(
+    BuildContext context, 
+    String label, 
+    List<String> options,
+    String selectedValue,
+    void Function(String?) onChanged,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -144,12 +200,10 @@ class SearchAthletesScreen extends StatelessWidget {
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
-              value: options.first,
+              value: selectedValue,
               isExpanded: true,
               icon: const Icon(Icons.arrow_drop_down),
-              onChanged: (value) {
-                // TODO: Handle selection
-              },
+              onChanged: onChanged,
               items: options.map((option) {
                 return DropdownMenuItem(
                   value: option,
