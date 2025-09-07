@@ -55,13 +55,13 @@ class RaceResult extends Equatable {
       roxzoneTime: row[10],
       runTime: row[11],
       runs: [
-        row[12], row[14], row[16], row[18], row[20], row[22], row[24], row[26]
+        row[12], row[15], row[18], row[21], row[24], row[27], row[30], row[33]
       ], // run_1, run_2, ..., run_8
       works: [
-        row[13], row[15], row[17], row[19], row[21], row[23], row[25], row[27]
+        row[13], row[16], row[19], row[22], row[25], row[28], row[31], row[34]
       ], // work_1, work_2, ..., work_8
       roxzones: [
-        row[28], row[29], row[30], row[31], row[32], row[33], row[34], row[35]
+        row[14], row[17], row[20], row[23], row[26], row[29], row[32], row[35]
       ], // roxzone_1, roxzone_2, ..., roxzone_8
     );
   }
