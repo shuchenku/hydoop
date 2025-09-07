@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forui/forui.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../routes/app_router.dart';
@@ -80,7 +79,7 @@ class SettingsScreen extends StatelessWidget {
             title,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
-              color: context.theme.colorScheme.primary,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
         ),
@@ -218,8 +217,8 @@ class SettingsScreen extends StatelessWidget {
       title: Text(title),
       subtitle: Text(subtitle),
       trailing: Radio<bool>(
-        value: true,
-        groupValue: isSelected,
+        value: isSelected,
+        groupValue: true,
         onChanged: (_) => onTap(),
       ),
       onTap: onTap,

@@ -52,44 +52,44 @@ class HydoopApp extends StatelessWidget {
   }
 
   ThemeData _buildMaterialTheme(FThemeData fTheme) {
-    final colorScheme = fTheme.colorScheme;
+    final colors = fTheme.colors;
     
     return ThemeData(
       useMaterial3: true,
-      brightness: colorScheme.brightness,
+      brightness: colors.brightness,
       
       // Color scheme
       colorScheme: ColorScheme(
-        brightness: colorScheme.brightness,
-        primary: colorScheme.primary,
-        onPrimary: colorScheme.primaryForeground,
-        secondary: colorScheme.secondary,
-        onSecondary: colorScheme.secondaryForeground,
-        error: colorScheme.destructive,
-        onError: colorScheme.destructiveForeground,
-        surface: colorScheme.background,
-        onSurface: colorScheme.foreground,
+        brightness: colors.brightness,
+        primary: colors.primary,
+        onPrimary: colors.primaryForeground,
+        secondary: colors.secondary,
+        onSecondary: colors.secondaryForeground,
+        error: colors.error,
+        onError: colors.errorForeground,
+        surface: colors.background,
+        onSurface: colors.foreground,
       ),
       
       // App Bar theme
       appBarTheme: AppBarTheme(
-        backgroundColor: colorScheme.background,
-        foregroundColor: colorScheme.foreground,
+        backgroundColor: colors.background,
+        foregroundColor: colors.foreground,
         elevation: 0,
         centerTitle: false,
         titleTextStyle: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w600,
-          color: colorScheme.foreground,
+          color: colors.foreground,
         ),
       ),
       
       // Scaffold theme
-      scaffoldBackgroundColor: colorScheme.background,
+      scaffoldBackgroundColor: colors.background,
       
       // Card theme
-      cardTheme: CardTheme(
-        color: colorScheme.background,
+      cardTheme: CardThemeData(
+        color: colors.background,
         elevation: AppTheme.cardElevation,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppTheme.borderRadius),
@@ -99,8 +99,8 @@ class HydoopApp extends StatelessWidget {
       // Elevated button theme
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: colorScheme.primary,
-          foregroundColor: colorScheme.primaryForeground,
+          backgroundColor: colors.primary,
+          foregroundColor: colors.primaryForeground,
           minimumSize: const Size(double.infinity, AppTheme.buttonHeight),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppTheme.borderRadius),
@@ -111,18 +111,18 @@ class HydoopApp extends StatelessWidget {
       // Input decoration theme
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: colorScheme.input,
+        fillColor: colors.muted,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-          borderSide: BorderSide(color: colorScheme.border),
+          borderSide: BorderSide(color: colors.border),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-          borderSide: BorderSide(color: colorScheme.border),
+          borderSide: BorderSide(color: colors.border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-          borderSide: BorderSide(color: colorScheme.ring, width: 2),
+          borderSide: BorderSide(color: colors.primary, width: 2),
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppTheme.spacingMd,

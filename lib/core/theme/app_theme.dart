@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:forui/forui.dart';
 
 class AppTheme {
@@ -22,41 +23,45 @@ class AppTheme {
 
   // Create light theme using Forui
   static FThemeData lightTheme = FThemeData(
-    colorScheme: const FColorScheme(
+    colors: FColors(
       brightness: Brightness.light,
+      systemOverlayStyle: SystemUiOverlayStyle.dark,
+      barrier: Colors.black54,
       background: lightBackground,
       foreground: lightOnBackground,
       primary: lightPrimary,
       primaryForeground: lightOnPrimary,
       secondary: lightSurface,
       secondaryForeground: lightOnSurface,
-      muted: Color(0xFFF8F9FA),
-      mutedForeground: Color(0xFF6C757D),
-      destructive: Color(0xFFDC3545),
+      muted: const Color(0xFFF8F9FA),
+      mutedForeground: const Color(0xFF6C757D),
+      destructive: const Color(0xFFDC3545),
       destructiveForeground: lightOnPrimary,
-      border: Color(0xFFDEE2E6),
-      input: Color(0xFFF8F9FA),
-      ring: lightPrimary,
+      error: const Color(0xFFDC3545),
+      errorForeground: lightOnPrimary,
+      border: const Color(0xFFDEE2E6),
     ),
   );
 
   // Create dark theme using Forui
   static FThemeData darkTheme = FThemeData(
-    colorScheme: const FColorScheme(
+    colors: FColors(
       brightness: Brightness.dark,
+      systemOverlayStyle: SystemUiOverlayStyle.light,
+      barrier: Colors.black87,
       background: darkBackground,
       foreground: darkOnBackground,
       primary: darkPrimary,
       primaryForeground: darkOnPrimary,
       secondary: darkSurface,
       secondaryForeground: darkOnSurface,
-      muted: Color(0xFF343A40),
-      mutedForeground: Color(0xFF9BA3A8),
-      destructive: Color(0xFFDC3545),
+      muted: const Color(0xFF343A40),
+      mutedForeground: const Color(0xFF9BA3A8),
+      destructive: const Color(0xFFDC3545),
       destructiveForeground: darkOnBackground,
-      border: Color(0xFF495057),
-      input: Color(0xFF343A40),
-      ring: darkPrimary,
+      error: const Color(0xFFDC3545),
+      errorForeground: darkOnBackground,
+      border: const Color(0xFF495057),
     ),
   );
 

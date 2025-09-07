@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:forui/forui.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../routes/app_router.dart';
 
@@ -38,7 +37,7 @@ class CrossRaceTrendsScreen extends StatelessWidget {
             Text(
               'Athlete IDs: ${athleteIds.join(', ')}',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: context.theme.colorScheme.mutedForeground,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
             
@@ -99,7 +98,7 @@ class CrossRaceTrendsScreen extends StatelessWidget {
                 Icon(
                   icon,
                   size: 24,
-                  color: context.theme.colorScheme.primary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(width: AppTheme.spacingSm),
                 Expanded(
@@ -116,7 +115,7 @@ class CrossRaceTrendsScreen extends StatelessWidget {
             Text(
               description,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: context.theme.colorScheme.mutedForeground,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
             const SizedBox(height: AppTheme.spacingMd),
@@ -126,7 +125,7 @@ class CrossRaceTrendsScreen extends StatelessWidget {
               height: 120,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: context.theme.colorScheme.muted,
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(AppTheme.borderRadius),
               ),
               child: Center(
@@ -136,13 +135,13 @@ class CrossRaceTrendsScreen extends StatelessWidget {
                     Icon(
                       icon,
                       size: 32,
-                      color: context.theme.colorScheme.mutedForeground,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                     const SizedBox(height: AppTheme.spacingSm),
                     Text(
                       'Chart placeholder',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: context.theme.colorScheme.mutedForeground,
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],

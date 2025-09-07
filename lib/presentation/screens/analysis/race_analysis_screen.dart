@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:forui/forui.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../routes/app_router.dart';
 
@@ -54,7 +53,7 @@ class RaceAnalysisScreen extends StatelessWidget {
             Icon(
               Icons.radar,
               size: 64,
-              color: context.theme.colorScheme.mutedForeground,
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
             const SizedBox(height: AppTheme.spacingMd),
             Text(
@@ -65,7 +64,7 @@ class RaceAnalysisScreen extends StatelessWidget {
             Text(
               'Spider chart showing percentile performance across all stations',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: context.theme.colorScheme.mutedForeground,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
               ),
               textAlign: TextAlign.center,
             ),
@@ -85,7 +84,7 @@ class RaceAnalysisScreen extends StatelessWidget {
             Icon(
               Icons.bar_chart,
               size: 64,
-              color: context.theme.colorScheme.mutedForeground,
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
             const SizedBox(height: AppTheme.spacingMd),
             Text(
@@ -96,7 +95,7 @@ class RaceAnalysisScreen extends StatelessWidget {
             Text(
               'Horizontal bar charts comparing percentiles with division average',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: context.theme.colorScheme.mutedForeground,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
               ),
               textAlign: TextAlign.center,
             ),
@@ -116,7 +115,7 @@ class RaceAnalysisScreen extends StatelessWidget {
             Icon(
               Icons.show_chart,
               size: 64,
-              color: context.theme.colorScheme.mutedForeground,
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
             const SizedBox(height: AppTheme.spacingMd),
             Text(
@@ -127,7 +126,7 @@ class RaceAnalysisScreen extends StatelessWidget {
             Text(
               'Line graphs showing run pace variation and consistency metrics',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: context.theme.colorScheme.mutedForeground,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
               ),
               textAlign: TextAlign.center,
             ),
@@ -147,7 +146,7 @@ class RaceAnalysisScreen extends StatelessWidget {
             Icon(
               Icons.fitness_center,
               size: 64,
-              color: context.theme.colorScheme.mutedForeground,
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
             const SizedBox(height: AppTheme.spacingMd),
             Text(
@@ -158,7 +157,7 @@ class RaceAnalysisScreen extends StatelessWidget {
             Text(
               'Detailed analysis of each workout station with recommendations',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: context.theme.colorScheme.mutedForeground,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
               ),
               textAlign: TextAlign.center,
             ),

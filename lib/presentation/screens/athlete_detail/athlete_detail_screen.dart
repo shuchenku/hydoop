@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:forui/forui.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../routes/app_router.dart';
 
@@ -74,7 +73,7 @@ class AthleteDetailScreen extends StatelessWidget {
                   Text(
                     'Athlete ID: $athleteId',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: context.theme.colorScheme.mutedForeground,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                 ],
@@ -102,7 +101,7 @@ class AthleteDetailScreen extends StatelessWidget {
                   Icon(
                     Icons.pie_chart_outline,
                     size: 64,
-                    color: context.theme.colorScheme.mutedForeground,
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                   const SizedBox(height: AppTheme.spacingMd),
                   Text(
@@ -113,7 +112,7 @@ class AthleteDetailScreen extends StatelessWidget {
                   Text(
                     'Total time, work time, run time, roxzone time breakdown',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: context.theme.colorScheme.mutedForeground,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -166,7 +165,7 @@ class AthleteDetailScreen extends StatelessWidget {
                       Text(
                         'Loading time...',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: context.theme.colorScheme.mutedForeground,
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -175,7 +174,7 @@ class AthleteDetailScreen extends StatelessWidget {
                 Text(
                   'Rank: --',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: context.theme.colorScheme.mutedForeground,
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
               ],
@@ -231,7 +230,7 @@ class AthleteDetailScreen extends StatelessWidget {
                         Text(
                           'Pace: --',
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: context.theme.colorScheme.mutedForeground,
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
                         ),
                       ],

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:forui/forui.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../routes/app_router.dart';
 
@@ -57,7 +56,7 @@ class RaceResultsScreen extends StatelessWidget {
             Text(
               'Showing 0 results',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: context.theme.colorScheme.mutedForeground,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
             
@@ -72,7 +71,7 @@ class RaceResultsScreen extends StatelessWidget {
                     Icon(
                       Icons.search_outlined,
                       size: 64,
-                      color: context.theme.colorScheme.mutedForeground,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                     const SizedBox(height: AppTheme.spacingMd),
                     Text(
@@ -83,7 +82,7 @@ class RaceResultsScreen extends StatelessWidget {
                     Text(
                       'Database initialization in progress',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: context.theme.colorScheme.mutedForeground,
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -113,7 +112,7 @@ class RaceResultsScreen extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacingSm),
           decoration: BoxDecoration(
-            border: Border.all(color: context.theme.colorScheme.border),
+            border: Border.all(color: Theme.of(context).colorScheme.outline),
             borderRadius: BorderRadius.circular(AppTheme.borderRadius),
           ),
           child: DropdownButtonHideUnderline(

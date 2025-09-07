@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:forui/forui.dart';
 import '../../../core/theme/app_theme.dart';
 
 class MyRacesScreen extends StatelessWidget {
@@ -29,7 +28,7 @@ class MyRacesScreen extends StatelessWidget {
               Icon(
                 Icons.bookmark_border,
                 size: 80,
-                color: context.theme.colorScheme.mutedForeground,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
               ),
               const SizedBox(height: AppTheme.spacingLg),
               Text(
@@ -42,7 +41,7 @@ class MyRacesScreen extends StatelessWidget {
               Text(
                 'Save athletes from race results or search to track and analyze their performance here.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: context.theme.colorScheme.mutedForeground,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
                 textAlign: TextAlign.center,
               ),

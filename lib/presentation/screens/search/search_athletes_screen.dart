@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:forui/forui.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../routes/app_router.dart';
 
@@ -100,7 +99,7 @@ class SearchAthletesScreen extends StatelessWidget {
                           Icon(
                             Icons.person_search_outlined,
                             size: 64,
-                            color: context.theme.colorScheme.mutedForeground,
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
                           const SizedBox(height: AppTheme.spacingMd),
                           Text(
@@ -111,7 +110,7 @@ class SearchAthletesScreen extends StatelessWidget {
                           Text(
                             'Search by name, bib number, or filter by race/division',
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: context.theme.colorScheme.mutedForeground,
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -140,7 +139,7 @@ class SearchAthletesScreen extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacingSm),
           decoration: BoxDecoration(
-            border: Border.all(color: context.theme.colorScheme.border),
+            border: Border.all(color: Theme.of(context).colorScheme.outline),
             borderRadius: BorderRadius.circular(AppTheme.borderRadius),
           ),
           child: DropdownButtonHideUnderline(

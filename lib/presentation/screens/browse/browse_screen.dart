@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:forui/forui.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../routes/app_router.dart';
 
@@ -89,20 +87,18 @@ class BrowseScreen extends StatelessWidget {
   }
 
   Widget _buildSeasonChip(BuildContext context, String label, bool isSelected) {
-    final theme = context.theme;
-    
     return FilterChip(
       label: Text(label),
       selected: isSelected,
       onSelected: (selected) {
         // TODO: Implement season filtering
       },
-      backgroundColor: theme.colorScheme.secondary,
-      selectedColor: theme.colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      selectedColor: Theme.of(context).colorScheme.primary,
       labelStyle: TextStyle(
         color: isSelected 
-          ? theme.colorScheme.primaryForeground 
-          : theme.colorScheme.secondaryForeground,
+          ? Theme.of(context).colorScheme.onPrimary 
+          : Theme.of(context).colorScheme.onSecondary,
       ),
     );
   }
@@ -115,7 +111,7 @@ class BrowseScreen extends StatelessWidget {
     required String date,
     required String participants,
   }) {
-    final theme = context.theme;
+    final theme = Theme.of(context);
     
     return Card(
       margin: const EdgeInsets.only(bottom: AppTheme.spacingSm),
@@ -133,7 +129,7 @@ class BrowseScreen extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title,
-                      style: theme.typography.lg.copyWith(
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -144,12 +140,12 @@ class BrowseScreen extends StatelessWidget {
                       vertical: AppTheme.spacingXs,
                     ),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withOpacity(0.1),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       '$participants participants',
-                      style: theme.typography.xs.copyWith(
+                      style: theme.textTheme.labelSmall?.copyWith(
                         color: theme.colorScheme.primary,
                         fontWeight: FontWeight.w500,
                       ),
@@ -163,26 +159,26 @@ class BrowseScreen extends StatelessWidget {
                   Icon(
                     Icons.location_on_outlined,
                     size: 16,
-                    color: theme.colorScheme.mutedForeground,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                   const SizedBox(width: AppTheme.spacingXs),
                   Text(
                     location,
-                    style: theme.typography.sm.copyWith(
-                      color: theme.colorScheme.mutedForeground,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                   const SizedBox(width: AppTheme.spacingMd),
                   Icon(
                     Icons.calendar_today_outlined,
                     size: 16,
-                    color: theme.colorScheme.mutedForeground,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                   const SizedBox(width: AppTheme.spacingXs),
                   Text(
                     date,
-                    style: theme.typography.sm.copyWith(
-                      color: theme.colorScheme.mutedForeground,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                 ],
