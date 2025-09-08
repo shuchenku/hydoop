@@ -27,10 +27,15 @@ class _SearchAthletesScreenState extends State<SearchAthletesScreen> {
   bool _hasSearched = false;
   String? _error;
   
+  // Map event names to IDs for search
   final Map<String, String> _raceEventIds = {
     'S8 2025 Beijing': 'HPRO_LR3MS4JICA9',
     'S7 2025 Shanghai': 'HPRO_LR3MS4JIA3E',
   };
+
+  String _getEventIdFromRaceName(String raceName) {
+    return _raceEventIds[raceName] ?? '';
+  }
   
   @override
   void initState() {
@@ -65,13 +70,28 @@ class _SearchAthletesScreenState extends State<SearchAthletesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
     return Scaffold(
+      backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
-        title: const Text('Search Athletes'),
+        backgroundColor: theme.colorScheme.surface,
+        elevation: 0,
         leading: IconButton(
           onPressed: () => AppRouter.goBack(context),
-          icon: const Icon(Icons.arrow_back),
+          icon: Icon(
+            Icons.arrow_back,
+            color: theme.colorScheme.onSurface,
+          ),
         ),
+        title: Text(
+          'Search Athletes',
+          style: theme.textTheme.headlineMedium?.copyWith(
+            fontWeight: FontWeight.w500,
+            color: theme.colorScheme.onSurface,
+          ),
+        ),
+        centerTitle: false,
       ),
       body: Column(
         children: [
@@ -194,13 +214,13 @@ class _SearchAthletesScreenState extends State<SearchAthletesScreen> {
     
     try {
       final repository = context.read<RaceRepository>();
-      final eventId = _raceEventIds[_selectedRace];
+      final eventId = _getEventIdFromRaceName(_selectedRace);
       
       final results = await repository.searchRaceResults(
-        eventId: eventId,
+        eventId: eventId.isNotEmpty ? eventId : null,
         division: _selectedDivision == 'All' ? null : _selectedDivision,
-        firstName: firstName.isEmpty ? null : firstName,
-        bibNumber: bibNumber.isEmpty ? null : bibNumber,
+        firstName: firstName.isNotEmpty ? firstName : null,
+        bibNumber: bibNumber.isNotEmpty ? bibNumber : null,
       );
       
       setState(() {
@@ -339,7 +359,7 @@ class _SearchAthletesScreenState extends State<SearchAthletesScreen> {
     return Card(
       margin: const EdgeInsets.only(bottom: AppTheme.spacingSm),
       child: InkWell(
-        onTap: () => AppRouter.goToAthleteDetail(context, result.id),
+        onTap: () => AppRouter.goToAthleteDetail(context, result.id, eventId: result.eventId),
         borderRadius: BorderRadius.circular(AppTheme.borderRadius),
         child: Padding(
           padding: const EdgeInsets.all(AppTheme.spacingMd),

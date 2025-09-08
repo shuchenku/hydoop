@@ -76,7 +76,11 @@ class AppRouter {
         name: 'athlete-detail',
         builder: (context, state) {
           final athleteId = int.parse(state.pathParameters['athleteId']!);
-          return AthleteDetailScreen(athleteId: athleteId);
+          final eventId = state.uri.queryParameters['eventId'];
+          return AthleteDetailScreen(
+            athleteId: athleteId,
+            eventId: eventId,
+          );
         },
       ),
       GoRoute(
@@ -130,8 +134,14 @@ class AppRouter {
     context.go('${AppConstants.browseRoute}/search');
   }
 
-  static void goToAthleteDetail(BuildContext context, int athleteId) {
-    context.go('${AppConstants.athleteDetailRoute}/$athleteId');
+  static void goToAthleteDetail(BuildContext context, int athleteId, {String? eventId}) {
+    final uri = Uri.parse('${AppConstants.athleteDetailRoute}/$athleteId');
+    final queryParams = <String, String>{};
+    if (eventId != null) {
+      queryParams['eventId'] = eventId;
+    }
+    final finalUri = uri.replace(queryParameters: queryParams.isEmpty ? null : queryParams);
+    context.go(finalUri.toString());
   }
 
   static void goToMyRaces(BuildContext context) {

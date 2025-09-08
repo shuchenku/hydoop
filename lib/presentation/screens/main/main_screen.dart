@@ -23,7 +23,7 @@ class MainScreen extends StatelessWidget {
           color: Theme.of(context).colorScheme.surface,
           border: Border(
             top: BorderSide(
-              color: Theme.of(context).dividerColor,
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
               width: 1,
             ),
           ),

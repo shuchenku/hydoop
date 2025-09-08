@@ -130,23 +130,23 @@ class HydoopApp extends StatelessWidget {
         ),
       ),
       
-      // Text theme
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(fontSize: 36, height: 1.1),
-        displayMedium: TextStyle(fontSize: 30, height: 1.2),
-        displaySmall: TextStyle(fontSize: 24, height: 1.4),
-        headlineLarge: TextStyle(fontSize: 20, height: 1.6),
-        headlineMedium: TextStyle(fontSize: 18, height: 1.6),
-        headlineSmall: TextStyle(fontSize: 16, height: 1.5),
-        titleLarge: TextStyle(fontSize: 18, height: 1.6),
-        titleMedium: TextStyle(fontSize: 16, height: 1.5),
-        titleSmall: TextStyle(fontSize: 14, height: 1.5),
-        bodyLarge: TextStyle(fontSize: 16, height: 1.5),
-        bodyMedium: TextStyle(fontSize: 14, height: 1.5),
-        bodySmall: TextStyle(fontSize: 12, height: 1.4),
-        labelLarge: TextStyle(fontSize: 14, height: 1.5),
-        labelMedium: TextStyle(fontSize: 12, height: 1.4),
-        labelSmall: TextStyle(fontSize: 12, height: 1.4),
+      // Text theme - matching reference design typography
+      textTheme: TextTheme(
+        displayLarge: TextStyle(fontSize: 32, height: 1.2, fontWeight: FontWeight.w500),
+        displayMedium: TextStyle(fontSize: 28, height: 1.2, fontWeight: FontWeight.w500),
+        displaySmall: TextStyle(fontSize: 24, height: 1.3, fontWeight: FontWeight.w500),
+        headlineLarge: TextStyle(fontSize: 20, height: 1.4, fontWeight: FontWeight.w500),
+        headlineMedium: TextStyle(fontSize: 18, height: 1.4, fontWeight: FontWeight.w500),
+        headlineSmall: TextStyle(fontSize: 16, height: 1.4, fontWeight: FontWeight.w500),
+        titleLarge: TextStyle(fontSize: 18, height: 1.4, fontWeight: FontWeight.w500),
+        titleMedium: TextStyle(fontSize: 16, height: 1.4, fontWeight: FontWeight.w500),
+        titleSmall: TextStyle(fontSize: 14, height: 1.4, fontWeight: FontWeight.w500),
+        bodyLarge: TextStyle(fontSize: 16, height: 1.5, fontWeight: FontWeight.w400),
+        bodyMedium: TextStyle(fontSize: 14, height: 1.5, fontWeight: FontWeight.w400),
+        bodySmall: TextStyle(fontSize: 12, height: 1.4, fontWeight: FontWeight.w400),
+        labelLarge: TextStyle(fontSize: 14, height: 1.4, fontWeight: FontWeight.w400),
+        labelMedium: TextStyle(fontSize: 12, height: 1.4, fontWeight: FontWeight.w400),
+        labelSmall: TextStyle(fontSize: 11, height: 1.3, fontWeight: FontWeight.w400),
       ),
     );
   }

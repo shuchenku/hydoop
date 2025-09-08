@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../data/repositories/race_repository.dart';
 import '../../../routes/app_router.dart';
 
 class BrowseScreen extends StatefulWidget {
@@ -10,212 +12,255 @@ class BrowseScreen extends StatefulWidget {
 }
 
 class _BrowseScreenState extends State<BrowseScreen> {
-  String _selectedSeason = 'S8 (2025)';
+  String _selectedSeason = 'All';
   
-  final List<Map<String, String>> _seasons = [
-    {'label': 'S8 (2025)', 'value': 'S8'},
-    {'label': 'S7 (2025)', 'value': 'S7'},
-    {'label': 'S6 (2024)', 'value': 'S6'},
-  ];
+  List<String> _availableSeasons = ['All'];
+  List<Map<String, dynamic>> _allRaces = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRaceData();
+  }
+
+  Future<void> _loadRaceData() async {
+    try {
+      final repository = context.read<RaceRepository>();
+      
+      // Get unique events from actual database
+      final events = await repository.getUniqueEvents();
+      
+      // Build race data with participant counts
+      List<Map<String, dynamic>> races = [];
+      Set<String> seasons = {};
+      
+      for (String eventName in events) {
+        // Extract season from event name (e.g., "S8 2025 Beijing" -> "S8")
+        String season = _extractSeasonFromEventName(eventName);
+        seasons.add(season);
+        
+        // Get event ID (we need to map this properly)
+        String eventId = _getEventIdFromName(eventName);
+        
+        // Count participants for this event
+        final count = await repository.getResultCount(eventId: eventId);
+        
+        races.add({
+          'eventId': eventId,
+          'eventName': eventName,
+          'season': season,
+          'location': _extractLocationFromEventName(eventName),
+          'year': _extractYearFromEventName(eventName),
+          'participantCount': count,
+        });
+      }
+      
+      setState(() {
+        _allRaces = races;
+        _availableSeasons = ['All', ...seasons.toList()..sort()];
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  String _extractSeasonFromEventName(String eventName) {
+    // Extract season from names like "S8 2025 Beijing", "S7 2025 Shanghai"
+    RegExp regex = RegExp(r'S(\d+)');
+    Match? match = regex.firstMatch(eventName);
+    return match != null ? 'S${match.group(1)}' : 'Unknown';
+  }
+
+  String _extractLocationFromEventName(String eventName) {
+    // Extract location from names like "S8 2025 Beijing", "S7 2025 Shanghai"
+    List<String> parts = eventName.split(' ');
+    return parts.length >= 3 ? parts.sublist(2).join(' ') : eventName;
+  }
+
+  String _extractYearFromEventName(String eventName) {
+    // Extract year from names like "S8 2025 Beijing"
+    RegExp regex = RegExp(r'(\d{4})');
+    Match? match = regex.firstMatch(eventName);
+    return match != null ? match.group(1)! : '';
+  }
+
+  String _getEventIdFromName(String eventName) {
+    // Map event names to their IDs - this should come from database
+    const Map<String, String> eventMapping = {
+      'S8 2025 Beijing': 'HPRO_LR3MS4JICA9',
+      'S7 2025 Shanghai': 'HPRO_LR3MS4JIA3E',
+    };
+    return eventMapping[eventName] ?? '';
+  }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
     return Scaffold(
+      backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
-        title: const Text('Browse Races'),
+        backgroundColor: theme.colorScheme.surface,
+        elevation: 0,
+        title: Text(
+          'Browse',
+          style: theme.textTheme.headlineMedium?.copyWith(
+            fontWeight: FontWeight.w500,
+            color: theme.colorScheme.onSurface,
+          ),
+        ),
+        centerTitle: false,
         actions: [
           IconButton(
             onPressed: () => AppRouter.goToSearchAthletes(context),
-            icon: const Icon(Icons.search),
-            tooltip: 'Search Athletes',
+            icon: Icon(
+              Icons.search,
+              color: theme.colorScheme.onSurface,
+            ),
           ),
           IconButton(
             onPressed: () => AppRouter.goToSettings(context),
-            icon: const Icon(Icons.settings),
-            tooltip: 'Settings',
+            icon: Icon(
+              Icons.settings,
+              color: theme.colorScheme.onSurface,
+            ),
           ),
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(AppTheme.spacingMd),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Season Filter Section
-            Text(
-              'Filter by Season',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
+            if (_isLoading)
+              const Center(child: CircularProgressIndicator())
+            else ...[
+              // Season selector with badge-style buttons
+              Row(
+                children: _availableSeasons.map((season) => 
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: _buildSeasonBadge(
+                      context, 
+                      season, 
+                      _selectedSeason == season,
+                      () => setState(() => _selectedSeason = season),
+                    ),
+                  ),
+                ).toList(),
               ),
-            ),
-            const SizedBox(height: AppTheme.spacingSm),
-            
-            // Season chips
-            Wrap(
-              spacing: AppTheme.spacingSm,
-              children: _seasons.map((season) => 
-                _buildSeasonChip(
-                  context, 
-                  season['label']!, 
-                  _selectedSeason == season['label'],
-                  () => setState(() => _selectedSeason = season['label']!),
+              
+              const SizedBox(height: 24),
+              
+              // Races List
+              Expanded(
+                child: ListView.separated(
+                  itemCount: _getFilteredRaces().length,
+                  separatorBuilder: (context, index) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) => _buildRaceCard(context, _getFilteredRaces()[index]),
                 ),
-              ).toList(),
-            ),
-            
-            const SizedBox(height: AppTheme.spacingLg),
-            
-            // Races List
-            Text(
-              'Available Races',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
               ),
-            ),
-            const SizedBox(height: AppTheme.spacingSm),
-            
-            Expanded(
-              child: ListView(
-                children: _getFilteredRaces(),
-              ),
-            ),
+            ],
           ],
         ),
       ),
     );
   }
 
-  List<Widget> _getFilteredRaces() {
-    final allRaces = [
-      {
-        'eventId': 'HPRO_LR3MS4JICA9',
-        'title': 'S8 2025 Beijing',
-        'location': 'Beijing, China',
-        'date': '2025',
-        'participants': '450',
-        'season': 'S8 (2025)',
-      },
-      {
-        'eventId': 'HPRO_LR3MS4JIA3E',
-        'title': 'S7 2025 Shanghai',
-        'location': 'Shanghai, China',
-        'date': '2025',
-        'participants': '520',
-        'season': 'S7 (2025)',
-      },
-      {
-        'eventId': 'HPRO_LR3MS4JIA3F',
-        'title': 'S6 2024 Demo Race',
-        'location': 'Demo City',
-        'date': '2024',
-        'participants': '300',
-        'season': 'S6 (2024)',
-      },
-    ];
-    
-    final filteredRaces = allRaces.where((race) => race['season'] == _selectedSeason).toList();
-    
-    return filteredRaces.map((race) => _buildRaceCard(
-      context,
-      eventId: race['eventId']!,
-      title: race['title']!,
-      location: race['location']!,
-      date: race['date']!,
-      participants: race['participants']!,
-    )).toList();
+  List<Map<String, dynamic>> _getFilteredRaces() {
+    if (_selectedSeason == 'All') {
+      return _allRaces;
+    }
+    return _allRaces.where((race) => race['season'] == _selectedSeason).toList();
   }
   
-  Widget _buildSeasonChip(BuildContext context, String label, bool isSelected, VoidCallback onTap) {
-    return FilterChip(
-      label: Text(label),
-      selected: isSelected,
-      onSelected: (_) => onTap(),
-      backgroundColor: Theme.of(context).colorScheme.secondary,
-      selectedColor: Theme.of(context).colorScheme.primary,
-      labelStyle: TextStyle(
-        color: isSelected 
-          ? Theme.of(context).colorScheme.onPrimary 
-          : Theme.of(context).colorScheme.onSecondary,
+  Widget _buildSeasonBadge(BuildContext context, String label, bool isSelected, VoidCallback onTap) {
+    final theme = Theme.of(context);
+    
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? theme.colorScheme.primary : theme.colorScheme.secondary,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected ? theme.colorScheme.primary : Colors.transparent,
+            width: 1,
+          ),
+        ),
+        child: Text(
+          label,
+          style: theme.textTheme.labelMedium?.copyWith(
+            color: isSelected ? theme.colorScheme.onPrimary : theme.colorScheme.onSecondary,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildRaceCard(
-    BuildContext context, {
-    required String eventId,
-    required String title,
-    required String location,
-    required String date,
-    required String participants,
-  }) {
+  Widget _buildRaceCard(BuildContext context, Map<String, dynamic> race) {
     final theme = Theme.of(context);
     
-    return Card(
-      margin: const EdgeInsets.only(bottom: AppTheme.spacingSm),
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+        border: Border.all(
+          color: theme.dividerColor.withValues(alpha: 0.2),
+          width: 1,
+        ),
+      ),
       child: InkWell(
-        onTap: () => AppRouter.goToRaceResults(context, eventId, eventName: title),
+        onTap: () => AppRouter.goToRaceResults(
+          context, 
+          race['eventId']!, 
+          eventName: race['eventName']!,
+        ),
         borderRadius: BorderRadius.circular(AppTheme.borderRadius),
         child: Padding(
-          padding: const EdgeInsets.all(AppTheme.spacingMd),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                race['eventName']!,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
+              const SizedBox(height: 8),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: Text(
-                      title,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_outlined,
+                          size: 16,
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          race['location']!,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppTheme.spacingSm,
-                      vertical: AppTheme.spacingXs,
-                    ),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '$participants participants',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppTheme.spacingXs),
-              Row(
-                children: [
-                  Icon(
-                    Icons.location_on_outlined,
-                    size: 16,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                  ),
-                  const SizedBox(width: AppTheme.spacingXs),
                   Text(
-                    location,
+                    '${race['participantCount']} athletes',
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                    ),
-                  ),
-                  const SizedBox(width: AppTheme.spacingMd),
-                  Icon(
-                    Icons.calendar_today_outlined,
-                    size: 16,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                  ),
-                  const SizedBox(width: AppTheme.spacingXs),
-                  Text(
-                    date,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],

@@ -3,23 +3,25 @@ import 'package:flutter/services.dart';
 import 'package:forui/forui.dart';
 
 class AppTheme {
-  // Light theme colors
-  static const Color lightPrimary = Color(0xFFFF6B00);
-  static const Color lightSecondary = Color(0xFF2196F3);
+  // Light theme colors - matching reference design exactly
+  static const Color lightPrimary = Color(0xFFFFCC00);
+  static const Color lightAccent = Color(0xFFFF6B00);
+  static const Color lightSecondary = Color(0xFFF5F5F5);
   static const Color lightBackground = Color(0xFFFFFFFF);
   static const Color lightSurface = Color(0xFFF5F5F5);
-  static const Color lightOnPrimary = Color(0xFFFFFFFF);
-  static const Color lightOnBackground = Color(0xFF000000);
-  static const Color lightOnSurface = Color(0xFF333333);
+  static const Color lightOnPrimary = Color(0xFF000000);
+  static const Color lightOnBackground = Color(0xFF1A1A1A);
+  static const Color lightOnSurface = Color(0xFF666666);
   
-  // Dark theme colors  
+  // Dark theme colors - matching reference design exactly
   static const Color darkPrimary = Color(0xFFFFCC00);
-  static const Color darkSecondary = Color(0xFF2196F3);
+  static const Color darkAccent = Color(0xFFFF6B00);
+  static const Color darkSecondary = Color(0xFF2D2D2D);
   static const Color darkBackground = Color(0xFF1A1A1A);
   static const Color darkSurface = Color(0xFF2D2D2D);
   static const Color darkOnPrimary = Color(0xFF000000);
   static const Color darkOnBackground = Color(0xFFFFFFFF);
-  static const Color darkOnSurface = Color(0xFFE0E0E0);
+  static const Color darkOnSurface = Color(0xFFB0B0B0);
 
   // Create light theme using Forui
   static FThemeData lightTheme = FThemeData(
@@ -31,15 +33,15 @@ class AppTheme {
       foreground: lightOnBackground,
       primary: lightPrimary,
       primaryForeground: lightOnPrimary,
-      secondary: lightSurface,
+      secondary: lightSecondary,
       secondaryForeground: lightOnSurface,
-      muted: const Color(0xFFF8F9FA),
-      mutedForeground: const Color(0xFF6C757D),
-      destructive: const Color(0xFFDC3545),
-      destructiveForeground: lightOnPrimary,
-      error: const Color(0xFFDC3545),
-      errorForeground: lightOnPrimary,
-      border: const Color(0xFFDEE2E6),
+      muted: lightSecondary,
+      mutedForeground: lightOnSurface,
+      destructive: const Color(0xFFFF4444),
+      destructiveForeground: lightBackground,
+      error: const Color(0xFFFF4444),
+      errorForeground: lightBackground,
+      border: const Color(0xFFE5E5E5),
     ),
   );
 
@@ -53,21 +55,21 @@ class AppTheme {
       foreground: darkOnBackground,
       primary: darkPrimary,
       primaryForeground: darkOnPrimary,
-      secondary: darkSurface,
+      secondary: darkSecondary,
       secondaryForeground: darkOnSurface,
-      muted: const Color(0xFF343A40),
-      mutedForeground: const Color(0xFF9BA3A8),
-      destructive: const Color(0xFFDC3545),
+      muted: darkSecondary,
+      mutedForeground: darkOnSurface,
+      destructive: const Color(0xFFFF4444),
       destructiveForeground: darkOnBackground,
-      error: const Color(0xFFDC3545),
+      error: const Color(0xFFFF4444),
       errorForeground: darkOnBackground,
-      border: const Color(0xFF495057),
+      border: const Color(0xFF404040),
     ),
   );
 
-  // Component-specific styling
-  static const double cardElevation = 2.0;
-  static const double borderRadius = 8.0;
+  // Component-specific styling - matching reference design
+  static const double cardElevation = 0.0;  // Reference uses flat design
+  static const double borderRadius = 10.0;   // Reference uses 0.625rem = 10px
   static const double buttonHeight = 48.0;
   static const double inputHeight = 44.0;
   static const double iconSize = 24.0;

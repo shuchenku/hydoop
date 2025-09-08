@@ -40,9 +40,10 @@ class DatabaseHelper {
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE $_tableName (
+        internal_id INTEGER PRIMARY KEY AUTOINCREMENT,
         event_id TEXT NOT NULL,
         event_name TEXT NOT NULL,
-        id INTEGER PRIMARY KEY,
+        id INTEGER NOT NULL,
         name TEXT NOT NULL,
         gender TEXT NOT NULL,
         nationality TEXT NOT NULL,
@@ -86,6 +87,9 @@ class DatabaseHelper {
     await db.execute('CREATE INDEX idx_age_group ON $_tableName(age_group)');
     await db.execute('CREATE INDEX idx_nationality ON $_tableName(nationality)');
     
+    // Create unique constraint on event_id + id to prevent true duplicates
+    await db.execute('CREATE UNIQUE INDEX idx_event_bib ON $_tableName(event_id, id)');
+    
     // Import initial data
     await _importInitialData(db);
   }
@@ -107,7 +111,9 @@ class DatabaseHelper {
       // Import S7 Shanghai data
       await _importCsvFile(db, 'assets/data/S7 2025 Shanghai.csv');
       
-      print('Successfully imported initial race data');
+      // Check final count
+      final count = await db.rawQuery('SELECT COUNT(*) as count FROM $_tableName');
+      print('Successfully imported initial race data. Total records: ${count.first['count']}');
     } catch (e) {
       print('Error importing initial data: $e');
     }
@@ -116,7 +122,7 @@ class DatabaseHelper {
   Future<void> _importCsvFile(Database db, String assetPath) async {
     try {
       final csvString = await rootBundle.loadString(assetPath);
-      final List<List<dynamic>> csvData = const CsvToListConverter().convert(csvString);
+      final List<List<dynamic>> csvData = const CsvToListConverter(eol: '\n').convert(csvString);
       
       // Skip header row
       final dataRows = csvData.skip(1);
@@ -130,22 +136,30 @@ class DatabaseHelper {
         batches.add(dataRows.skip(i).take(end - i).toList());
       }
       
-      for (final batch in batches) {
+      int totalImported = 0;
+      int totalErrors = 0;
+      
+      for (int batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+        final batch = batches[batchIndex];
         await db.transaction((txn) async {
           for (final row in batch) {
             try {
               final rowStrings = row.map((e) => e?.toString() ?? '').toList();
               final raceResult = RaceResult.fromCsvRow(rowStrings);
-              await txn.insert(_tableName, raceResult.toMap());
+              await txn.insert(_tableName, raceResult.toMap(), conflictAlgorithm: ConflictAlgorithm.ignore);
+              totalImported++;
             } catch (e) {
-              print('Error importing row: $e');
+              totalErrors++;
+              if (totalErrors <= 5) {
+                print('Error importing row: $e');
+              }
               continue;
             }
           }
         });
       }
       
-      print('Imported ${dataRows.length} records from $assetPath');
+      print('Import complete for $assetPath: $totalImported imported, $totalErrors errors');
     } catch (e) {
       print('Error importing CSV file $assetPath: $e');
       throw e;
